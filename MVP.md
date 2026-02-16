@@ -10,14 +10,14 @@
 ## Data Models (Fields Only)
 ### User
 - id: INTEGER PRIMARY KEY AUTOINCREMENT
-- email: string
-- passwordHash: string
-- name: string (optional)
-- billingAddress: string
-- shippingAddress: string
+- email: string NOT NULL
+- passwordHash: string NOT NULL
+- name: string NOT NULL
+- billingAddress: string (nullable on signup but NOT NULL on checkout)
+- shippingAddress: string (nullable on signup but NOT NULL on checkout)
 - createdAt: datetime
 
-### Product
+### Products
 - id: INTEGER PRIMARY KEY AUTOINCREMENT
 - slug: string
 - name: string
@@ -37,21 +37,20 @@
 
 ### CartItem
 - productId: INTEGER
-- name: string
+- name: string NOT NULL
 - priceCents: number
 - quantity: number
 
 ### Order
 - id: INTEGER PRIMARY KEY AUTOINCREMENT
 - userId: INTEGER (nullable for guest)
-- items: OrderItem[]
 - subtotalCents: number
 - taxCents: number
 - shippingCents: number
 - totalCents: number
 - status: string (placed, shipped, delivered)
-- shippingAddress: string
-- billingAddress: string
+- shippingAddress: string (nullable on signup but NOT NULL on checkout)
+- billingAddress: string (nullable on signup but NOT NULL on checkout)
 - createdAt: datetime
 
 ### OrderItem
