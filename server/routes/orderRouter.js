@@ -9,7 +9,7 @@ const orderRouter = async (req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
     if (pathSegments[0] === 'orders' && !pathSegments[1] && method === 'GET') {
-        return orderController.getProducts(req, res);
+        return orderController.checkout(req, res);
     }
 
     if (pathSegments[0] === 'orders' && pathSegments[1] && method === 'GET') {
