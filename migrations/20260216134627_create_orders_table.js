@@ -3,13 +3,13 @@
  * @returns { Promise<void> }
  */
 exports.up = function (knex) {
-  return knex.schema.createTable("Orders", function (table) {
+  return knex.schema.createTable("orders", function (table) {
     table.increments("id");
     table
-      .integer("user_id")
+      .integer("user_id", 11)
       .unsigned()
       .references("id")
-      .inTable("Users")
+      .inTable("users")
       .onDelete("SET NULL");
     table.integer("sub_total_cents");
     table.integer("tax_cents");
@@ -27,5 +27,5 @@ exports.up = function (knex) {
  * @returns { Promise<void> }
  */
 exports.down = function (knex) {
-    return knex.schema.dropTable("Orders");
+    return knex.schema.dropTable("orders");
 };
