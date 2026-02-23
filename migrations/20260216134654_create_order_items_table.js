@@ -3,12 +3,12 @@
  * @returns { Promise<void> }
  */
 exports.up = function (knex) {
-  return knex.schema.createTable("Order_items", function (table) {
+  return knex.schema.createTable("order_items", function (table) {
     table.increments("id");
     table
-      .integer("orders_id")
+      .integer("order_id")
       .references("id")
-      .inTable("Orders")
+      .inTable("orders")
       .onDelete("CASCADE");
     table.integer("price_cents");
     table.integer("quantity").notNullable();
@@ -16,7 +16,7 @@ exports.up = function (knex) {
     table
       .integer("product_id")
       .references("id")
-      .inTable("Products")
+      .inTable("products")
       .onDelete("SET NULL");
   });
 };
@@ -26,5 +26,5 @@ exports.up = function (knex) {
  * @returns { Promise<void> }
  */
 exports.down = function (knex) {
-    return knex.schema.dropTable("Order_items");
+    return knex.schema.dropTable("order_items");
 };
