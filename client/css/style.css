@@ -1,24 +1,21 @@
 :root {
-  --bg-color: #fff; /* Subtle gray background from design */
+  --bg-color: #fff;
   --text-primary: #000;
-  --accent-blue: #add8e6; /* The light blue underline from the store title */
+  --accent-blue: #add8e6;
   --nav-bg: #ffffff;
 }
 
-/* 1. Global Reset & Typography */
 body {
   background-color: var(--bg-color);
   margin: 0;
   padding: 0;
-  /* Beardington uses a typewriter/monospace font for branding */
   font-family: Arial;
   color: var(--text-primary);
 }
 
-/* Container for the navbar */
 .top-nav-div {
   width: 100%;
-  background-color: #eee; /* Changed to white to match your design files */
+  background-color: #eee;
   border-bottom: 1px solid #eee;
 }
 
@@ -26,21 +23,23 @@ nav#navbar {
   position: sticky;
   top: 0;
   display: flex;
-  justify-content: space-between; /* Pushes left and right sections apart */
+  justify-content: space-between;
   align-items: center;
   padding: 1rem 3rem;
   z-index: 1000;
   transition: top 500ms ease-in-out;
 }
 
-/* Base style for nav sections */
 .nav-section {
   display: flex;
   gap: 2rem;
-  flex: 1; /* This forces left and right sections to take equal space */
+  flex: 1;
 }
 
-/* Aligns the right links to the far right */
+.nav-section.left {
+  justify-content: flex-start;
+}
+
 .nav-section.right {
   justify-content: flex-end;
 }
@@ -56,19 +55,29 @@ nav#navbar {
   text-decoration: underline;
 }
 
-/* Centered Logo Style */
 .logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+.logo img {
+  height: 60px;
+  display: block;
+}
+
+.shopping-bag.img {
+  padding-bottom: -20px;
+}
+
+.profile-link {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.logo img {
-  height: 40px;
-  display: block;
-}
-
-/* Animation classes from your existing script */
 nav.scroll-down {
   top: -100px;
 }
@@ -81,7 +90,7 @@ nav.scroll-up {
   color: var(--text-primary);
   font-size: 0.85rem;
   font-weight: bold;
-  text-transform: none; /* Reference image uses standard casing for "About Beardington" */
+  text-transform: none;
   margin: 0 1.5em;
 }
 
@@ -90,11 +99,6 @@ nav.scroll-up {
   text-decoration: underline;
 }
 
-.logo img {
-  height: 40px; /* Space for the moustache icon */
-}
-
-/* 3. Main Store Layout */
 main {
   max-width: 1100px;
   margin: 40px auto;
@@ -106,10 +110,10 @@ h1 {
   font-weight: bold;
   margin-bottom: 50px;
   display: inline-block;
-  border-bottom: 3px solid var(--accent-blue); /* Signature teal/blue underline */
+  border-bottom: 3px solid var(--accent-blue);
+  width: 50%;
 }
 
-/* 4. Product Grid & Circular Tins */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -118,11 +122,12 @@ h1 {
 
 .product-card {
   text-align: center;
-  background: transparent; /* Remove the boxy border from your original */
-  border: none;
+  background: transparent;
+  border: 1px solid #999;
+  border-radius: 2em;
+  padding: 2em;
 }
 
-/* This creates the round tin appearance from the reference */
 .tin-visual {
   width: 180px;
   height: 180px;
@@ -161,9 +166,14 @@ h1 {
   margin-bottom: 10px;
 }
 
-/* 5. Buttons & Footer */
+.add-btn-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .add-btn {
-  background-color: var(--text-primary); /* Modern black button */
+  background-color: var(--text-primary);
   color: #fff;
   border: none;
   padding: 8px 15px;
@@ -171,10 +181,23 @@ h1 {
   font-family: inherit;
   font-size: 0.8rem;
   text-transform: uppercase;
+  border-radius: 8px;
 }
 
 .add-btn:hover {
   background-color: #333;
+  cursor: pointer;
+}
+
+.view-details-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 1em;
+}
+
+.view-details-container a {
+  text-decoration: none;
 }
 
 footer {
