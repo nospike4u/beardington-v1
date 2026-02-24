@@ -1,4 +1,4 @@
-const db = require("../db");
+const db = require("../../db");
 const { getRequestBody } = require("../utils/bodyParser");
 const { hashPassword } = require("../utils/auth");
 

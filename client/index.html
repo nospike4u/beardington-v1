@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="icon" href="/assets/moustache-favicon-180x180.png" />
+    <title>Beardington Products Listing</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <header class="top-nav-div">
+  <nav id="navbar">
+    <div class="nav-section left">
+      <a href="/" data-link>Home</a>
+      <a href="/products" data-link>Products</a>
+    </div>
+
+    <div class="logo">
+      <a href="/" data-link>
+        <img src="/assets/moustache-icon.png" alt="Beardington" style="height: 30px;">
+      </a>
+    </div>
+
+    <div class="nav-section right">
+      <a href="/cart" data-link>Cart</a>
+      <a href="/profile" data-link>Profile</a>
+    </div>
+  </nav>
+</header>
+
+    <main id="app"></main>
+
+    <script src="/js/app.js" type="module"></script>
+    <script>
+      console.log("hello from inline");
+    </script>
+
+    <script>
+      const navigateTo = (url) => {
+        history.pushState(null, null, url);
+        router();
+      };
+
+      const router = async () => {
+        const routes = [
+          { path: "/product", view: () => console.log("Viewing Products") },
+          { path: "/orders", view: () => console.log("Viewing Order") },
+          { path: "/checkout", view: () => console.log("Viewing Checkout") },
+          { path: "/cart", view: () => console.log("Viewing Cart") },
+          { path: "/signup", view: () => console.log("Viewing Signup") },
+          { path: "/login", view: () => console.log("Viewing Login") },
+          { path: "/logout", view: () => console.log("Viewing Login/Logout") },
+        ];
+
+        // Test each route for potential match
+        const potentialMatches = routes.map((route) => {
+          return {
+            route: route,
+            isMatch: location.pathname === route.path,
+          };
+        });
+
+        let match = potentialMatches.find(
+          (potentialMatch) => potentialMatch.isMatch,
+        );
+
+        if (!match) {
+          match = { route: routes[0], isMatch: true };
+        }
+
+        console.log(match.route.path);
+        // Here you would call a function to render the specific HTML for that route
+      };
+
+      // Handle "Back" and "Forward" buttons
+      window.addEventListener("popstate", router);
+
+      document.addEventListener("DOMContentLoaded", () => {
+        document.body.addEventListener("click", (e) => {
+          if (e.target.matches("[data-link]")) {
+            e.preventDefault();
+            navigateTo(e.target.href);
+          }
+        });
+
+        router();
+      });
+    </script>
+
+    <footer>
+      <div>
+        <nav>
+          <a href="#"> Terms and Conditions </a>
+          <a href="#"> Terms of Service </a>
+          <a href="#"> Privacy Policy </a>
+        </nav>
+        <p class="footer-text">
+          Copyright © <span class="display-year"></span> Beardington. All rights
+          reserved.
+        </p>
+        <script>
+          const currentYear = new Date().getFullYear();
+          const yearElement = document.querySelector(".display-year");
+          yearElement.textContent = currentYear;
+        </script>
+      </div>
+    </footer>
+  </body>
+</html>
