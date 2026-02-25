@@ -7,10 +7,12 @@
 
 body {
   background-color: var(--bg-color);
+  color: var(--text-primary);
+  min-height: 100vh;
   margin: 0;
   padding: 0;
   font-family: Arial;
-  color: var(--text-primary);
+  flex-direction: column;
 }
 
 .top-nav-div {
@@ -207,4 +209,17 @@ footer {
   margin-top: 50px;
   border-top: 1px solid #eee;
   font-size: 0.8rem;
+}
+
+.footer-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4em;
+  margin-bottom: 2em;
+  
+}
+
+.footer-nav a {
+  text-decoration: none;
 }

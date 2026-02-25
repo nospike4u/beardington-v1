@@ -102,20 +102,24 @@
 
     <footer>
       <div>
-        <nav>
-          <a href="#"> Terms and Conditions </a>
-          <a href="#"> Terms of Service </a>
-          <a href="#"> Privacy Policy </a>
-        </nav>
-        <p class="footer-text">
-          Copyright © <span class="display-year"></span> Beardington. All rights
-          reserved.
-        </p>
-        <script>
-          const currentYear = new Date().getFullYear();
-          const yearElement = document.querySelector(".display-year");
-          yearElement.textContent = currentYear;
-        </script>
+        <div class="footer-nav-container">
+          <nav class="footer-nav">
+            <a href="#"> Terms of Service </a>
+            <a href="#"> Terms and Conditions </a>
+            <a href="#"> Privacy Policy </a>
+          </nav>
+        </div>
+        <div>
+          <p class="footer-text">
+            Copyright © <span class="display-year"></span> <strong>Beardington</strong>. All
+            rights reserved.
+          </p>
+          <script>
+            const currentYear = new Date().getFullYear();
+            const yearElement = document.querySelector(".display-year");
+            yearElement.textContent = currentYear;
+          </script>
+        </div>
       </div>
     </footer>
   </body>
