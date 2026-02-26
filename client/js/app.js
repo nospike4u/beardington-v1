@@ -1,11 +1,22 @@
 import { renderProducts } from "./products.js";
+import { renderProfile } from "./profile.js";
 import { renderCart } from "./cart.js";
 
 const appRouter = () => {
-  if (location.pathname === "/cart") {
-    renderCart();
-  } else {
-    renderProducts();
+  const path = location.pathname;
+  switch (path) {
+    case "/":
+    case "/products":
+      renderProducts();
+      break;
+    case "/profile":
+      renderProfile();
+      break;
+    case "/cart":
+      renderCart();
+      break;
+    default:
+      renderProducts();
   }
 };
 
