@@ -24,7 +24,7 @@ export const renderProducts = async () => {
                 <img src="${firstUrl}" alt="${product.name}" width="150">
                 <h2>${product.name}</h2>
                 <p>${product.description}</p>
-                <span class="price">$${(product.priceCents / 100).toFixed(2)}</span>
+                <span class="price">$${(product.price_cents / 100).toFixed(2)}</span>
                 <div class="add-btn-container">
                 <button class="add-btn" data-id="${product.id}">Add to Cart</button>
                 </div>
