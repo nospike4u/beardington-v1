@@ -51,52 +51,21 @@
     <script>
       const navigateTo = (url) => {
         history.pushState(null, null, url);
-        router();
+        document.dispatchEvent(new Event("navigate"));
       };
 
-      const router = async () => {
-        const routes = [
-          { path: "/product", view: () => console.log("Viewing Products") },
-          { path: "/orders", view: () => console.log("Viewing Order") },
-          { path: "/checkout", view: () => console.log("Viewing Checkout") },
-          { path: "/cart", view: () => console.log("Viewing Cart") },
-          { path: "/signup", view: () => console.log("Viewing Signup") },
-          { path: "/login", view: () => console.log("Viewing Login") },
-          { path: "/logout", view: () => console.log("Viewing Login/Logout") },
-        ];
-
-        // Test each route for potential match
-        const potentialMatches = routes.map((route) => {
-          return {
-            route: route,
-            isMatch: location.pathname === route.path,
-          };
-        });
-
-        let match = potentialMatches.find(
-          (potentialMatch) => potentialMatch.isMatch,
-        );
-
-        if (!match) {
-          match = { route: routes[0], isMatch: true };
-        }
-
-        console.log(match.route.path);
-        // Here you would call a function to render the specific HTML for that route
-      };
-
-      // Handle "Back" and "Forward" buttons
-      window.addEventListener("popstate", router);
+      window.addEventListener("popstate", () => {
+        document.dispatchEvent(new Event("navigate"));
+      });
 
       document.addEventListener("DOMContentLoaded", () => {
         document.body.addEventListener("click", (e) => {
-          if (e.target.matches("[data-link]")) {
+          const link = e.target.closest("[data-link]");
+          if (link) {
             e.preventDefault();
-            navigateTo(e.target.href);
+            navigateTo(link.href);
           }
         });
-
-        router();
       });
     </script>
 
