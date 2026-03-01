@@ -1,7 +1,10 @@
+const crypto = require("crypto");
 const db = require("../db");
 const { verifyPassword, hashPassword } = require("../utils/auth");
 const { getRequestBody } = require("../utils/bodyParser");
-// const redis = require('../redisClient'); // Might need for later
+const redis = require('../redisClient');
+
+const SESSION_TTL = 86400; // 24h in seconds
 
 const signup = async (req, res) => {
   const { name, email, password } = await getRequestBody(req);
@@ -16,16 +19,12 @@ const login = async (req, res) => {
   const user = await db("users").where({ email }).first();
 
   if (user && (await verifyPassword(password, user.password_hash))) {
-    // Create Session ID
-    const sessionId = require("crypto").randomBytes(16).toString("hex");
+    const sessionId = crypto.randomBytes(16).toString("hex");
+    await redis.set(`sess:${sessionId}`, user.id, { EX: SESSION_TTL });
 
-    // Save to Redis (Session expires in 24h)
-    // await redis.set(`sess:${sessionId}`, user.id, 'EX', 86400);
-
-    // Set Cookie and Response
     res.setHeader(
       "Set-Cookie",
-      `sid=${sessionId}; HttpOnly; Path=/; Max-Age=86400`,
+      `sid=${sessionId}; HttpOnly; Path=/; Max-Age=${SESSION_TTL}`,
     );
     res.writeHead(200);
     res.end(JSON.stringify({ message: "Logged in", userId: user.id }));
@@ -36,9 +35,12 @@ const login = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  // Get sessionId from Cookie header, then delete from Redis
-  // await redis.del(`sess:${sessionId}`);
-  res.setHeader("Set-Cookie", "sid=; Path=/; Max-Age=0"); // Clear the cookie
+  const cookieHeader = req.headers.cookie || '';
+  const match = cookieHeader.match(/(?:^|;\s*)sid=([^;]+)/);
+  if (match) {
+    await redis.del(`sess:${match[1]}`);
+  }
+  res.setHeader("Set-Cookie", "sid=; Path=/; Max-Age=0");
   res.writeHead(200);
   res.end(JSON.stringify({ message: "Logged out" }));
 };

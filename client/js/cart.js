@@ -18,7 +18,7 @@ const CartItemTemplate = (item) => {
       : "/assets/placeholder-product-image.png";
 
   return `
-    <div class="cart-item" data-id="${item.id}">
+    <div class="cart-card" data-id="${item.id}">
       <img src="${firstUrl}" alt="${item.name}" width="100">
       <div class="item-info">
         <h2>${item.name}</h2>
@@ -29,6 +29,7 @@ const CartItemTemplate = (item) => {
           <button class="qty-btn" data-action="increase">+</button>
         </div>
       </div>
+      <br>
       <button class="delete-btn">Remove</button>
     </div>
   `;
@@ -60,7 +61,7 @@ const updateCart = (cartData) => {
     </section>`;
 
   document.getElementById("cart-container").addEventListener("click", async (e) => {
-    const cartItem = e.target.closest(".cart-item");
+    const cartItem = e.target.closest(".cart-card");
 
     if (e.target.classList.contains("delete-btn") && cartItem) {
       const productId = parseInt(cartItem.dataset.id, 10);

@@ -202,6 +202,72 @@ h1 {
   text-decoration: none;
 }
 
+#checkout-btn {
+  background-color: #56db85;
+  color: #fff;
+  border: none;
+  padding: 8px 15px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.8rem;
+  text-transform: lowercase;
+  border-radius: 8px;
+}
+
+#checkout-btn:hover {
+  background-color: #09c94c;
+  cursor: pointer;
+}
+
+.cart-card {
+  text-align: center;
+  background: transparent;
+  border: 1px solid #999;
+  border-radius: 2em;
+  padding: 2em;
+  margin-bottom: 1em;
+}
+
+.qty-btn {
+  border: 1px;
+  border-radius: 50%;
+  width: 2.5em;
+  padding: 0.6rem;
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+.qty-btn:hover {
+  background-color: #000;
+  color: #fff;
+  cursor: pointer;
+}
+
+.profile-card {
+  text-align: center;
+  background: transparent;
+  border: 1px solid #999;
+  border-radius: 2em;
+  padding: 2em;
+}
+
+.delete-btn {
+  background-color: #ff5353;
+  color: #fff;
+  border: none;
+  padding: 8px 15px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  border-radius: 8px;
+}
+
+.delete-btn:hover {
+  background-color: #fe0707;
+  cursor: pointer;
+}
+
 footer {
   text-align: center;
   background-color: #fff;
@@ -217,7 +283,6 @@ footer {
   justify-content: center;
   gap: 4em;
   margin-bottom: 2em;
-  
 }
 
 .footer-nav a {

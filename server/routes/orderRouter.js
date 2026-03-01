@@ -1,24 +1,22 @@
-// const orderController = require("./controllers/orderController");
+const orderController = require('../controllers/orderController');
 
-// const orderRouter = async (req, res) => {
+const orderRouter = async (req, res, pathSegments) => {
+    const { method } = req;
+    res.setHeader('Content-Type', 'application/json');
 
-//     const { method, url } = req;
-//     const [path, query] = url.split('?');
-//     const pathSegments = path.split('/').filter(Boolean);
+    // POST /api/checkout
+    if (pathSegments[0] === 'checkout' && method === 'POST') {
+        return orderController.placeOrder(req, res);
+    }
 
-//     res.setHeader('Content-Type', 'application/json');
+    // GET /api/orders/:id
+    if (pathSegments[0] === 'orders' && pathSegments[1] && method === 'GET') {
+        const orderId = parseInt(pathSegments[1], 10);
+        return orderController.getOrder(req, res, orderId);
+    }
 
-//     if (pathSegments[0] === 'orders' && !pathSegments[1] && method === 'GET') {
-//         return orderController.checkout(req, res);
-//     }
+    res.writeHead(404);
+    res.end(JSON.stringify({ error: 'Route not found' }));
+};
 
-//     if (pathSegments[0] === 'orders' && pathSegments[1] && method === 'GET') {
-//         const id = pathSegments[1];
-//         return productController.getProductById(req, res, id);
-//     }
-
-//     res.writeHead(404);
-//     res.end(JSON.stringify({ message: "Route not found" }));
-// };
-
-// module.exports = orderRouter;
+module.exports = orderRouter;

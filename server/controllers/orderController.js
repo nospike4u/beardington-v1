@@ -1,46 +1,97 @@
-// const db = require('../../db');
-// const { getRequestBody } = require('../utils/bodyParser');
+const db = require('../db');
+const redisClient = require('../redisClient');
+const { getSessionUserId } = require('../utils/session');
 
-//     const checkout = async (req, res) => {
-//         const trx = await db.transaction();
-//         try {
-//             const { cart, shippingAddress, billingAddress } = await getRequestBody(req);
-            
-//             // Logic based on API.md requirement: Calculate totals
-//             const subtotalCents = cart.items.reduce((sum, i) => sum + (i.priceCents * i.quantity), 0);
-//             const taxCents = Math.round(subtotalCents * 0.08); // Example 8% tax but can change dependent on market or currency in the future.
-//             const shippingCents = 500;
-//             const totalCents = subtotalCents + taxCents + shippingCents;
+const SHIPPING_CENTS = 150; // £1.50 flat rate
 
-//             const [orderId] = await trx('orders').insert({
-//                 user_id: cart.userId,
-//                 sub_total_cents: subtotalCents,
-//                 tax_cents: taxCents,
-//                 shipping_cents: shippingCents,
-//                 total_cents: totalCents,
-//                 status: 'placed',
-//                 shipping_address: shippingAddress,
-//                 billing_address: billingAddress
-//             }).returning('id');
+const placeOrder = async (req, res) => {
+    const userId = await getSessionUserId(req);
+    if (!userId) {
+        res.writeHead(401);
+        return res.end(JSON.stringify({ error: 'Not authenticated' }));
+    }
 
-//             const orderItems = cart.items.map(item => ({
-//                 order_id: orderId.id || orderId,
-//                 product_id: item.productId,
-//                 name: item.name,
-//                 price_cents: item.priceCents,
-//                 quantity: item.quantity
-//             }));
+    const cartData = await redisClient.get(`cart:${userId}`);
+    const cart = cartData ? JSON.parse(cartData) : { items: [] };
 
-//             await trx('order_items').insert(orderItems);
-//             await trx.commit();
+    if (!cart.items || cart.items.length === 0) {
+        res.writeHead(400);
+        return res.end(JSON.stringify({ error: 'Cart is empty' }));
+    }
 
-//             res.writeHead(200);
-//             res.end(JSON.stringify({ message: "Order placed", orderId }));
-//         } catch (e) {
-//             await trx.rollback();
-//             res.writeHead(500);
-//             res.end(JSON.stringify({ error: e.message }));
-//         }
-//     };
+    const ids = cart.items.map(i => i.productId);
+    const products = await db('products').whereIn('id', ids);
+    const productMap = Object.fromEntries(products.map(p => [p.id, p]));
 
-//     module.exports = { checkout };
+    const subtotalCents = cart.items.reduce((sum, item) => {
+        const product = productMap[item.productId];
+        return sum + (product ? product.price_cents * item.quantity : 0);
+    }, 0);
+    const totalCents = subtotalCents + SHIPPING_CENTS;
+
+    const user = await db('users').where({ id: userId }).first();
+
+    const trx = await db.transaction();
+    try {
+        const [orderRow] = await trx('orders').insert({
+            user_id: userId,
+            sub_total_cents: subtotalCents,
+            tax_cents: 0,
+            shipping_cents: SHIPPING_CENTS,
+            total_cents: totalCents,
+            status: 'placed',
+            shipping_address: user.shipping_address || '',
+            billing_address: user.billing_address || '',
+        }).returning('id');
+
+        const orderId = orderRow.id ?? orderRow;
+
+        const orderItems = cart.items.map(item => {
+            const product = productMap[item.productId];
+            return {
+                order_id: orderId,
+                product_id: item.productId,
+                name: product?.name || 'Unknown',
+                price_cents: product?.price_cents || 0,
+                quantity: item.quantity,
+            };
+        });
+
+        await trx('order_items').insert(orderItems);
+        await trx.commit();
+
+        await redisClient.del(`cart:${userId}`);
+
+        res.writeHead(200);
+        res.end(JSON.stringify({ message: 'Order placed', orderId }));
+    } catch (e) {
+        await trx.rollback();
+        res.writeHead(500);
+        res.end(JSON.stringify({ error: e.message }));
+    }
+};
+
+const getOrder = async (req, res, orderId) => {
+    const userId = await getSessionUserId(req);
+    if (!userId) {
+        res.writeHead(401);
+        return res.end(JSON.stringify({ error: 'Not authenticated' }));
+    }
+
+    const order = await db('orders').where({ id: orderId }).first();
+    if (!order) {
+        res.writeHead(404);
+        return res.end(JSON.stringify({ error: 'Order not found' }));
+    }
+    if (order.user_id !== userId) {
+        res.writeHead(403);
+        return res.end(JSON.stringify({ error: 'Forbidden' }));
+    }
+
+    const items = await db('order_items').where({ order_id: orderId });
+
+    res.writeHead(200);
+    res.end(JSON.stringify({ order: { ...order, items } }));
+};
+
+module.exports = { placeOrder, getOrder };

@@ -16,7 +16,7 @@ const verifyPassword = (password, storedHash) => {
         const [salt, hash] = storedHash.split(":");
         crypto.scrypt(password, salt, 64, (err, derivedKey) => {
             if (err) reject(err);
-            resolve(key.toString('hex') === hash);
+            resolve(derivedKey.toString('hex') === hash);
         });
     });
 };
