@@ -35,7 +35,7 @@ const getUserById = async (req, res, userId) => {
       res.end(JSON.stringify({ error: "User not found" }));
       return;
     }
-    // Don't send password_hash!
+    // Don't send password_hash lolz!
     const { password_hash, ...safeUser } = user;
     res.writeHead(200);
     res.end(JSON.stringify(safeUser));

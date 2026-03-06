@@ -1,7 +1,7 @@
 
 const redisClient = require("../redisClient");
 const { getRequestBody } = require("../utils/bodyParser");
-const db = require("../db"); // Adjust path if needed
+const db = require("../db");
 
 // Helper: fetch product details for each cart item
 async function enrichCartItems(cartItems) {

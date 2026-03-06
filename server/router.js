@@ -2,7 +2,8 @@ const productRouter = require("./routes/productRouter");
 const cartRouter = require("./routes/cartRouter");
 const orderRouter = require("./routes/orderRouter");
 const authRouter = require("./routes/authRouter");
-const userRouter = require("./routes/userRouter")
+const userRouter = require("./routes/userRouter");
+const addressRouter = require("./routes/addressRouter");
 
 const router = async (req, res) => {
   const [path] = req.url.split("?");
@@ -25,7 +26,10 @@ const router = async (req, res) => {
     case "logout":
       return authRouter(req, res, pathSegments);
     case "users":
-      return userRouter(req, res, pathSegments);  
+      if (pathSegments[2] === "addresses") {
+        return addressRouter(req, res, pathSegments);
+      }
+      return userRouter(req, res, pathSegments);
     default:
       res.writeHead(404);
       res.end(JSON.stringify({ error: "Route not found" }));
