@@ -1,6 +1,7 @@
 import { renderProducts } from "./products.js";
 import { renderProfile } from "./profile.js";
 import { renderCart } from "./cart.js";
+import { checkout } from "./checkout.js";
 
 const appRouter = () => {
   const path = location.pathname;
@@ -15,6 +16,8 @@ const appRouter = () => {
     case "/cart":
       renderCart();
       break;
+    case "/checkout/shipping":
+      return checkout();  
     default:
       renderProducts();
   }
